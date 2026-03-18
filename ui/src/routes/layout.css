@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Anta&display=swap');
 @import 'tailwindcss';
 
 html {
@@ -11,4 +12,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@theme {
+    --font-anta: 'Anta', sans-serif;
 }
