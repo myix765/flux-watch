@@ -1,7 +1,7 @@
 .PHONY: wasm dev clean
 
 wasm:
-	cd core && wasm-pack build --target bundler --out-dir ../ui/src/lib/wasm
+	cd core && wasm-pack build --target web --out-dir ../ui/src/lib/wasmc
 
 dev: wasm
 	cd ui && pnpm dev

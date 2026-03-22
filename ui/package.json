@@ -37,6 +37,6 @@
     },
     "dependencies": {
         "pixi.js": "^8.17.1",
-        "flux-core": "file:../core/pkg"
+        "flux-core": "file:./src/lib/wasmc"
     }
 }

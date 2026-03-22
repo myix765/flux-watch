@@ -1,23 +1,27 @@
 <script lang="ts">
-    import * as PIXI from 'pixi.js';
-    import { onMount } from 'svelte';
+  import * as PIXI from 'pixi.js';
+  import { onMount } from 'svelte';
 
-    let canvas: HTMLCanvasElement;
-    let container: HTMLDivElement;
+  let canvas: HTMLCanvasElement;
+  let container: HTMLDivElement;
 
-    onMount(async () => {
-        const PADDING = 16;
-        const app = new PIXI.Application();
+  onMount(async () => {
+    const { default: init, return_num } = await import('$lib/wasmc/flux_core.js');
+    await init();
+    console.log(return_num());
 
-        await app.init({
-            canvas,
-            backgroundColor: 0xed857e,
-            resizeTo: container
-        });
+    const PADDING = 16;
+    const app = new PIXI.Application();
 
-        app.stage.x = PADDING;
-        app.stage.y = PADDING;
+    await app.init({
+      canvas,
+      backgroundColor: 0xed857e,
+      resizeTo: container
     });
+
+    app.stage.x = PADDING;
+    app.stage.y = PADDING;
+  });
 </script>
 
 <div

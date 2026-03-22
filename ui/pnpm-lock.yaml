@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      flux-core:
+        specifier: file:./src/lib/wasmc
+        version: file:src/lib/wasmc
       pixi.js:
         specifier: ^8.17.1
         version: 8.17.1
@@ -886,6 +889,9 @@ packages:
 
   flatted@3.4.2:
     resolution: {integrity: sha512-PjDse7RzhcPkIJwy5t7KPWQSZ9cAbzQXcafsetQoD7sOJRQlGikNbx7yZp2OotDnJyrDcbyRq3Ttb18iYOqkxA==}
+
+  flux-core@file:src/lib/wasmc:
+    resolution: {directory: src/lib/wasmc, type: directory}
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -2144,6 +2150,8 @@ snapshots:
       keyv: 4.5.4
 
   flatted@3.4.2: {}
+
+  flux-core@file:src/lib/wasmc: {}
 
   fsevents@2.3.3:
     optional: true
