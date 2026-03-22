@@ -15,7 +15,7 @@
 
     await app.init({
       canvas,
-      backgroundColor: 0xed857e,
+      backgroundColor: 0x1099bb,
       resizeTo: container
     });
 
@@ -26,7 +26,7 @@
 
 <div
     bind:this={container}
-    class="absolute mr-[0.94rem] h-[33%] w-[14.8%] overflow-hidden rounded-[2.5rem]"
+    class="absolute top-[25.3%] bottom-[25.3%] left-[12.4%] right-[17%] overflow-hidden rounded-[15.75%] opacity-55"
 >
     <canvas bind:this={canvas}></canvas>
 </div>
