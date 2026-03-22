@@ -1,0 +1,16 @@
+# Rust
+/core/target/
+
+# WASM build output
+/ui/src/lib/wasm/
+
+# Svelte/Node
+/ui/node_modules/
+/ui/.vscode/
+/ui/.svelte-kit/
+/ui/build/
+
+# Env
+.env
+.env.*
+!.env.example

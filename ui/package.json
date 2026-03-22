@@ -1,5 +1,5 @@
 {
-    "name": "ui",
+    "name": "flux-ui",
     "private": true,
     "version": "0.0.1",
     "type": "module",
@@ -36,6 +36,7 @@
         "vite": "^7.3.1"
     },
     "dependencies": {
-        "pixi.js": "^8.17.1"
+        "pixi.js": "^8.17.1",
+        "flux-core": "file:../core/pkg"
     }
 }
