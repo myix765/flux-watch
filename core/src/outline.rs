@@ -1,0 +1,51 @@
+use ttf_parser::OutlineBuilder;
+
+pub enum PathCommand {
+    MoveTo(f32, f32),
+    LineTo(f32, f32),
+    QuadTo(f32, f32, f32, f32),
+    CubicTo(f32, f32, f32, f32, f32, f32),
+    Close,
+}
+
+pub struct BezierCollector {
+    pub scale: f32,
+    pub commands: Vec<PathCommand>,
+}
+
+// flip y values for compatibility with pixijs axis system
+impl OutlineBuilder for BezierCollector {
+    fn move_to(&mut self, x: f32, y: f32) {
+        self.commands.push(PathCommand::MoveTo(
+            x * self.scale,
+            -y * self.scale
+        ));
+    }
+    fn line_to(&mut self, x: f32, y: f32) {
+        self.commands.push(PathCommand::LineTo(
+            x * self.scale,
+            -y * self.scale
+        ));
+    }
+    fn quad_to(&mut self, x1: f32, y1: f32, x: f32, y: f32) {
+        self.commands.push(PathCommand::QuadTo(
+            x1 * self.scale,
+            -y1 * self.scale,
+            x * self.scale,
+            -y * self.scale
+        ));
+    }
+    fn curve_to(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, x: f32, y: f32) {
+        self.commands.push(PathCommand::CubicTo(
+            x1 * self.scale,
+            -y1 * self.scale,
+            x2 * self.scale,
+            -y2 * self.scale,
+            x * self.scale,
+            -y * self.scale
+        ));
+    }
+    fn close(&mut self) {
+        self.commands.push(PathCommand::Close);
+    }
+}
