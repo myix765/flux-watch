@@ -6,7 +6,7 @@
     let container: HTMLDivElement;
 
     onMount(async () => {
-        const { default: init, get_glyph_outline } = await import('$lib/wasmc/flux_core.js');
+        const { default: init, get_glyph_outline, get_time_layout } = await import('$lib/wasmc/flux_core.js');
         await init();
 
         const PADDING = 16;
@@ -14,7 +14,7 @@
 
         await app.init({
             canvas,
-            backgroundColor: 0x1099bb,
+            backgroundColor: 0x000,
             resizeTo: container
         });
 

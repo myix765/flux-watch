@@ -3,7 +3,7 @@
 wasm:
 	cd core && wasm-pack build --target web --out-dir ../ui/src/lib/wasmc
 
-dev: wasm
+dev:
 	cd ui && pnpm dev
 
 clean:

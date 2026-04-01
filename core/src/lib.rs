@@ -4,8 +4,7 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsValue;
 use ttf_parser::Face;
 use web_sys::console;
-use outline::{PathCommand, BezierCollector};
-use serde::Serialize;
+use outline::{PathCommand, BezierCollector, PathCommandJS, GlyphLayout};
 
 macro_rules! log {
     ($($t:tt)*) => {
@@ -15,35 +14,15 @@ macro_rules! log {
 
 const FONT_DATA: &[u8] = include_bytes!("../assets/Anta/Anta-Regular.ttf");
 
-#[derive(Serialize)]
-pub struct PathCommandJS {
-    pub kind: String,      // "MoveTo", "LineTo", "QuadTo", "CubicTo", "Close"
-    pub x: f32,
-    pub y: f32,
-    pub cx1: f32,          // control point 1 (only used for quad/cubic)
-    pub cy1: f32,
-    pub cx2: f32,          // control point 2 (only used for cubic)
-    pub cy2: f32,
-}
-
-#[wasm_bindgen]
-pub fn get_glyph_outline(d: char, target_height: f32) -> JsValue {
-    let face = Face::parse(FONT_DATA, 0).expect("Failed to parse font");
-
-    let glyph_id = face.glyph_index(d).expect(format!("Font is missing digit {}", d).as_str());
-    log!("Glyph ID: {:?}", glyph_id);
-    let b_box = face.glyph_bounding_box(glyph_id).expect("Failed to get bounding box");
-    log!("Bounding box: {:?}", b_box);
-    let units_per_em = face.units_per_em() as f32;
-    let scale = target_height / units_per_em;
+fn extract_commands(face: &Face, ch: char, scale: f32) -> Vec<PathCommandJS> {
+    let glyph_id = face.glyph_index(ch).expect(&format!("Missing glyph {}", ch));
     let mut collector = BezierCollector { scale, commands: vec![] };
-    face.outline_glyph(glyph_id, &mut collector).unwrap();
-
-    let js_commands: Vec<PathCommandJS> = collector.commands.iter().map(|cmd| {
+    face.outline_glyph(glyph_id, &mut collector);
+    collector.commands.iter().map(|cmd| {
         match cmd {
             PathCommand::MoveTo(x, y) => PathCommandJS { 
-                kind: "MoveTo".into(), x: *x, y: *y, 
-                cx1: 0.0, cy1: 0.0, cx2: 0.0, cy2: 0.0 
+                kind: "MoveTo".into(), x: *x, y: *y,
+                cx1: 0.0, cy1: 0.0, cx2: 0.0, cy2: 0.0
             },
             PathCommand::LineTo(x, y) => PathCommandJS { 
                 kind: "LineTo".into(), x: *x, y: *y,
@@ -62,7 +41,36 @@ pub fn get_glyph_outline(d: char, target_height: f32) -> JsValue {
                 cx1: 0.0, cy1: 0.0, cx2: 0.0, cy2: 0.0
             },
         }
+    }).collect()
+}
+
+#[wasm_bindgen]
+pub fn get_glyph_outline(d: char, target_height: f32) -> JsValue {
+    let face = Face::parse(FONT_DATA, 0).expect("Failed to parse font");
+    let scale = target_height / face.units_per_em() as f32;
+    serde_wasm_bindgen::to_value(&extract_commands(&face, d, scale)).unwrap()
+}
+
+#[wasm_bindgen]
+pub fn get_time_layout(hour: u32, minute: u32, target_height: f32, seed: u32) -> JsValue {
+    let face = Face::parse(FONT_DATA, 0).expect("Failed to parse font");
+    let scale = target_height / face.units_per_em() as f32;
+
+    let digits = [
+        (char::from_digit(hour / 10, 10).unwrap(), 0.0_f32, 0.0_f32),
+        (char::from_digit(hour % 10, 10).unwrap(), 50.0_f32, 0.0_f32),
+        (char::from_digit(minute / 10, 10).unwrap(), 0.0_f32, 100.0_f32),
+        (char::from_digit(minute % 10, 10).unwrap(), 50.0_f32, 100.0_f32),
+    ];
+
+    let layout: Vec<GlyphLayout> = digits.iter().map(|(ch, x, y)| {
+        GlyphLayout {
+            digit: ch.to_string(),
+            commands: extract_commands(&face, *ch, scale),
+            x_offset: *x,
+            y_offset: *y,
+        }
     }).collect();
 
-    serde_wasm_bindgen::to_value(&js_commands).unwrap()
+    serde_wasm_bindgen::to_value(&layout).unwrap()
 }

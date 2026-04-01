@@ -1,4 +1,5 @@
 use ttf_parser::OutlineBuilder;
+use serde::Serialize;
 
 pub enum PathCommand {
     MoveTo(f32, f32),
@@ -48,4 +49,23 @@ impl OutlineBuilder for BezierCollector {
     fn close(&mut self) {
         self.commands.push(PathCommand::Close);
     }
+}
+
+#[derive(Serialize)]
+pub struct PathCommandJS {
+    pub kind: String,      // "MoveTo", "LineTo", "QuadTo", "CubicTo", "Close"
+    pub x: f32,
+    pub y: f32,
+    pub cx1: f32,          // control point 1 (only used for quad/cubic)
+    pub cy1: f32,
+    pub cx2: f32,          // control point 2 (only used for cubic)
+    pub cy2: f32,
+}
+
+#[derive(Serialize)]
+pub struct GlyphLayout {
+    pub digit: String,
+    pub commands: Vec<PathCommandJS>,
+    pub x_offset: f32,
+    pub y_offset: f32,
 }
