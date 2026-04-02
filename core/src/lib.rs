@@ -56,7 +56,7 @@ pub fn get_time_layout(hour: u32, minutes: u32, width: f32, height: f32, seed: u
     let minute_ones = char::from_digit(minutes % 10, 10).unwrap();
 
     let stroke_width = 2.0;
-    let spacing = 16.0;
+    let spacing = 6.0;
     let cell_w = (width - stroke_width - spacing) / 2.0;
     let cell_h = (height - stroke_width - spacing) / 2.0;
 

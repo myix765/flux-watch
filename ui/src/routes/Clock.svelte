@@ -1,9 +1,19 @@
 <script lang="ts">
     import * as PIXI from 'pixi.js';
     import { onMount } from 'svelte';
+    import { clock } from '$lib/clock.svelte';
+
+    const c = clock();
 
     let canvas: HTMLCanvasElement;
     let container: HTMLDivElement;
+    let draw: (() => void) | undefined;
+
+     $effect(() => {
+        c.hours;
+        c.minutes;
+        draw?.();
+    });
 
     onMount(async () => {
     const { default: init, get_time_layout } = await import('$lib/wasmc/flux_core.js');
@@ -19,7 +29,7 @@
         antialias: false,
     });
 
-    function draw() {
+    draw = () => {
         app.stage.removeChildren();
 
         const PADDING = 16;
@@ -33,7 +43,7 @@
     
         app.stage.addChild(g);
 
-        const layout = get_time_layout(10, 42, targetWidth, targetHeight, 3);
+        const layout = get_time_layout(c.hours, c.minutes, targetWidth, targetHeight, 3);
 
         for (const glyph of layout) {
             const g = new PIXI.Graphics();
@@ -56,10 +66,8 @@
         }
     }
 
-    draw();
-
     const observer = new ResizeObserver(() => {
-        draw();
+        draw?.();
     });
     observer.observe(container);
 });
