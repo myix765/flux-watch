@@ -56,8 +56,9 @@ pub fn get_time_layout(hour: u32, minutes: u32, width: f32, height: f32, seed: u
     let minute_ones = char::from_digit(minutes % 10, 10).unwrap();
 
     let stroke_width = 2.0;
-    let cell_w = (width - stroke_width) / 2.0;
-    let cell_h = (height - stroke_width) / 2.0;
+    let spacing = 16.0;
+    let cell_w = (width - stroke_width - spacing) / 2.0;
+    let cell_h = (height - stroke_width - spacing) / 2.0;
 
     let chars = [hour_tens, hour_ones, minute_tens, minute_ones];
 
@@ -73,8 +74,8 @@ pub fn get_time_layout(hour: u32, minutes: u32, width: f32, height: f32, seed: u
         let col = (i % 2) as f32;
         let row = (i / 2) as f32;
 
-        let x_offset = col * cell_w - x_min * scale_x;
-        let y_offset = row * cell_h + cell_h - y_min * scale_y;
+        let x_offset = col * (cell_w + spacing) - x_min * scale_x;
+        let y_offset = row * (cell_h + spacing) + cell_h - y_min * scale_y;
 
         GlyphLayout {
             digit: ch.to_string(),
