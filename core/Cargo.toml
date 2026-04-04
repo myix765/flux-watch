@@ -11,4 +11,12 @@ wasm-bindgen = "0.2"
 serde = { version = "1", features = ["derive"] }
 serde-wasm-bindgen = "0.6"
 ttf-parser = "0.25.1"
+tiny-skia = "0.12.0"
+sdfer = "0.2.1"
 web-sys = { version = "0.3", features = ["console"] } # for logging
+console_error_panic_hook = "0.1.2"
+
+# for testing crate examples
+[[bin]]
+name = "test_skia"
+path = "src/test.rs"

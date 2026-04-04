@@ -1,5 +1,6 @@
 use ttf_parser::OutlineBuilder;
 use serde::Serialize;
+use sdfer::{Image2d, Unorm8};
 
 pub enum PathCommand {
     MoveTo(f32, f32),
@@ -10,37 +11,28 @@ pub enum PathCommand {
 }
 
 pub struct BezierCollector {
-    pub scale_x: f32,
-    pub scale_y: f32,
     pub commands: Vec<PathCommand>,
 }
 
-// flip y values for compatibility with pixijs axis system
+pub struct GlyphData {
+    pub ch: char,
+    pub commands: Vec<PathCommand>,
+    pub sdf: Image2d<Unorm8>,
+    pub bbox: (f32, f32, f32, f32),
+}
+
 impl OutlineBuilder for BezierCollector {
     fn move_to(&mut self, x: f32, y: f32) {
-        self.commands.push(PathCommand::MoveTo(
-            x * self.scale_x,
-            -y * self.scale_y
-        ));
+        self.commands.push(PathCommand::MoveTo(x, y));
     }
     fn line_to(&mut self, x: f32, y: f32) {
-        self.commands.push(PathCommand::LineTo(
-            x * self.scale_x,
-            -y * self.scale_y
-        ));
+        self.commands.push(PathCommand::LineTo(x, y));
     }
     fn quad_to(&mut self, x1: f32, y1: f32, x: f32, y: f32) {
-        self.commands.push(PathCommand::QuadTo(
-            x1 * self.scale_x, -y1 * self.scale_y,
-            x * self.scale_x,  -y * self.scale_y
-        ));
+        self.commands.push(PathCommand::QuadTo(x1, y1, x, y));
     }
     fn curve_to(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, x: f32, y: f32) {
-        self.commands.push(PathCommand::CubicTo(
-            x1 * self.scale_x, -y1 * self.scale_y,
-            x2 * self.scale_x, -y2 * self.scale_y,
-            x * self.scale_x,  -y * self.scale_y
-        ));
+        self.commands.push(PathCommand::CubicTo(x1, y1, x2, y2, x, y));
     }
     fn close(&mut self) {
         self.commands.push(PathCommand::Close);
