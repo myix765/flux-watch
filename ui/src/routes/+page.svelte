@@ -13,8 +13,8 @@
     </div>
     <div class="flex min-h-0 h-full w-full flex-1 items-center justify-center">
         <div class="relative aspect-659/1143 h-3/4 max-h-full">
-            <img src={AppleWatch} alt="Apple Watch" class="h-full w-full object-contain" />
             <Clock />
+            <img src={AppleWatch} alt="Apple Watch" class="h-full w-full object-contain" />
         </div>
     </div>
 </div>
